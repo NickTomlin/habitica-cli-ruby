@@ -1,14 +1,15 @@
 module HabiticaCli
+  # shared task related behavior
   module Task
     private
 
-    def list_task_type(type)
+    def list_task_type(_type)
       response = api.get('user/tasks')
 
       if response.success?
         display(response)
       else
-        puts "Error connecting to habit api"
+        puts 'Error connecting to habit api'
       end
     end
 

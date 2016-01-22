@@ -1,7 +1,12 @@
-require "bundler/gem_tasks"
+require 'bundler/gem_tasks'
+require 'rubocop/rake_task'
 require 'rubygems/package_task'
+require 'rspec/core/rake_task'
 
-spec = eval(File.read('habitica-cli.gemspec'))
+spec = eval(File.read('habitica-cli.gemspec')) # rubocop:disable Lint/Eval
 
-Gem::PackageTask.new(spec) do |pkg|
-end
+Gem::PackageTask.new(spec)
+RuboCop::RakeTask.new
+RSpec::Core::RakeTask.new(:spec)
+
+task default: %w(rubocop spec)
