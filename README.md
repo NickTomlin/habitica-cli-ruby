@@ -1,6 +1,6 @@
-# Habitica::Cli
+# habitica-cli
 
-TODO: Write a gem description
+A command line interface for habitica
 
 ## Installation
 
@@ -20,9 +20,23 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```shell
+habitica <command> <action>
+```
 
 ## Contributing
+
+```
+bundle
+# lint and run specs
+rake
+
+# run specs
+rake spec
+
+# lint
+rake rubocop
+```
 
 1. Fork it ( https://github.com/[my-github-username]/habitica-cli/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
