@@ -19,6 +19,10 @@ module HabiticaCli
       @connection.post(url, body)
     end
 
+    def put(url, body)
+      @connection.put(url, body)
+    end
+
     private
 
     def default_headers(user_id, api_token)
