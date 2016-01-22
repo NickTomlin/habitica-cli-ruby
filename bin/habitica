@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'habitica_cli'
+
+HabiticaCli.start(ARGV)
