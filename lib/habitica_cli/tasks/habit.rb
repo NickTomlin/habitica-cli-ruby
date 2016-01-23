@@ -7,19 +7,23 @@ module HabiticaCli
 
     desc 'list', 'list habits'
     def list
-      list_task_type('habit')
+      _list
+    end
+
+    desc 'add <text>', 'add a new habit'
+    def add(text)
+      _add(text)
+    end
+
+    desc 'complete <id>', 'complete a habit'
+    def complete(id)
+      _complete(id)
     end
 
     private
 
-    def display(response)
-      habits = response.body.select do |task|
-        task['type'] == 'habit'
-      end
-
-      habits.each do |item|
-        puts "- #{item['text']}\n"
-      end
+    def type
+      Types::Habit
     end
   end
 end

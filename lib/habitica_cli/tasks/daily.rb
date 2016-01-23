@@ -7,19 +7,23 @@ module HabiticaCli
 
     desc 'list', 'list dailies'
     def list
-      list_task_type('daily')
+      _list
+    end
+
+    desc 'add <text>', 'add a new daily'
+    def add(text)
+      _add(text)
+    end
+
+    desc 'complete <id>', 'complete a daily'
+    def complete(id)
+      _complete(id)
     end
 
     private
 
-    def display(response)
-      dailies = response.body.select do |task|
-        task['type'] == 'daily'
-      end
-
-      dailies.each do |item|
-        puts "- #{item['text']}\n"
-      end
+    def type
+      Types::Daily
     end
   end
 end

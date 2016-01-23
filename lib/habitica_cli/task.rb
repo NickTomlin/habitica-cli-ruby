@@ -1,9 +1,56 @@
+require 'habitica_cli/constants'
+
 module HabiticaCli
   # shared task related behavior
   module Task
     private
+    def type
+      raise 'Not implemented'
+    end
 
-    def list_task_type(_type)
+    def select(item)
+      item['type'] == type
+    end
+
+    def display(response)
+      items = response.body.select do |item|
+        select(item)
+      end
+
+      puts type.capitalize
+      puts "----"
+      items.each do |item|
+        puts "- #{item['text']} #{item['id']}\n"
+      end
+    end
+
+    def _complete(id)
+      response = api.post(
+        "user/tasks/#{id}/up"
+      )
+
+      if response.success?
+        puts "Completed #{response.body['text']}"
+      else
+        puts "Error #{response.body}"
+      end
+    end
+
+    def _add(text)
+      response = api.post(
+        'user/tasks',
+        type: type,
+        text: text
+      )
+
+      if response.success?
+        puts "Added #{response.body['text']}"
+      else
+        puts "Error adding #{text}: #{response.body}"
+      end
+    end
+
+    def _list
       response = api.get('user/tasks')
 
       if response.success?
