@@ -1,63 +1,69 @@
-require 'habitica_cli/constants'
-
 module HabiticaCli
   # shared task related behavior
-  module Task
-    private
-
-    def type
-      fail 'Not implemented'
-    end
-
-    def select(item)
-      item['type'] == type
-    end
-
-    def display(response)
-      items = response.body.select do |item|
-        select(item)
-      end
-
-      puts type.capitalize
-      puts '----'
-      items.each do |item|
-        puts "- #{item['text']} #{item['id']}\n"
-      end
-    end
-
-    def _complete(id)
-      response = api.post(
-        "user/tasks/#{id}/up"
-      )
+  class Task < Thor
+    # TODO: consider using this inside display instead of select
+    desc 'list <type>', 'list tasks, optionally filterd by <type>'
+    method_option :show_completed, aliases: '-c', default: false, type: :boolean
+    def list(type = nil)
+      validate_type(type) if type
+      response = api.get('user/tasks')
 
       if response.success?
-        puts "Completed #{response.body['text']}"
+        display(response, type)
       else
-        puts "Error #{response.body}"
+        puts 'Error connecting to habit api'
       end
     end
 
-    def _add(text)
-      response = api.post(
-        'user/tasks',
-        type: type,
-        text: text
-      )
+    desc 'add <text>', 'add a new habit'
+    def add(type, text)
+      validate_type(type)
+      response = api.post('user/tasks', type: type, text: text)
 
       if response.success?
-        puts "Added #{response.body['text']}"
+        puts "Added #{response.body['text']} #{response.body['id']}"
       else
         puts "Error adding #{text}: #{response.body}"
       end
     end
 
-    def _list
-      response = api.get('user/tasks')
+    desc 'do <id>', 'complete a todo, daily, or habit'
+    def do(id)
+      response = api.post("user/tasks/#{id}/up")
 
       if response.success?
-        display(response)
+        puts "Completed!"
       else
-        puts 'Error connecting to habit api'
+        puts "Error #{response.body}"
+      end
+    end
+
+    desc 'clear', 'clear completed todos'
+    def clear
+      api.post('user/tasks/clear-completed')
+    end
+
+    private
+
+    def validate_type(type)
+      types = %w(todo habit daily)
+      fail "Not a valid type (#{types})" unless types.include?(type)
+    end
+
+    def select(items, type = nil)
+      items.select do |item|
+        (type.nil? || item['type'] == type) &&
+          (options['show_completed'] == true || item['completed'] != true)
+      end
+    end
+
+    def display(response, type)
+      items = select(response.body, type)
+      puts type.capitalize unless type.nil?
+      items.each do |item|
+        output = type.nil? ? "#{item['type']} " : ''
+        output += "- #{item['text']} #{item['id']}"
+        puts output
       end
     end
 

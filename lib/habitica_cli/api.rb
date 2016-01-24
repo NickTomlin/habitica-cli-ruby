@@ -15,7 +15,7 @@ module HabiticaCli
       @connection.get(url)
     end
 
-    def post(url, body)
+    def post(url, body = nil)
       @connection.post(url, body)
     end
 
