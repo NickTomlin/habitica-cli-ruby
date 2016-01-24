@@ -23,7 +23,7 @@ module HabiticaCli
     private
 
     def type
-      Types::Daily
+      Types::DAILY
     end
   end
 end

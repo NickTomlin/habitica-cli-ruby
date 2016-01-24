@@ -4,8 +4,9 @@ module HabiticaCli
   # shared task related behavior
   module Task
     private
+
     def type
-      raise 'Not implemented'
+      fail 'Not implemented'
     end
 
     def select(item)
@@ -18,7 +19,7 @@ module HabiticaCli
       end
 
       puts type.capitalize
-      puts "----"
+      puts '----'
       items.each do |item|
         puts "- #{item['text']} #{item['id']}\n"
       end
@@ -61,10 +62,10 @@ module HabiticaCli
     end
 
     def api
-      user = parent_options['habit_user']
-      key = parent_options['habit_key']
+      user = parent_options[:habit_user]
+      key = parent_options[:habit_key]
       if user.empty? || key.empty?
-        raise "You must provide a habit user and api key \n\n do this via (HABIT_USER and HABIT_KEY) or the --habit_user --habit_key"
+        fail "You must provide a habit user and api key \n\n do this via (HABIT_USER and HABIT_KEY) or the --habit_user --habit_key" # rubocop:disable Metrics/LineLength
       end
       Api.new(user, key)
     end

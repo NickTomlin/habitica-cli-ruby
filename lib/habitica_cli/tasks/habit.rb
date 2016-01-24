@@ -23,7 +23,7 @@ module HabiticaCli
     private
 
     def type
-      Types::Habit
+      Types::HABIT
     end
   end
 end

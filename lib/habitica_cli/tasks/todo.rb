@@ -12,7 +12,7 @@ module HabiticaCli
 
     desc 'add <text>', 'add a new todo'
     def add(text)
-      _add
+      _add(text)
     end
 
     desc 'complete <id>', 'complete a todo'
@@ -20,11 +20,10 @@ module HabiticaCli
       _complete(id)
     end
 
-
     private
 
     def type
-      Types::Todo
+      Types::TODO
     end
 
     def select(item)

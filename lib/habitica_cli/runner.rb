@@ -7,8 +7,8 @@ require 'habitica_cli/tasks/habit'
 module HabiticaCli
   # encapsulate our sub commands
   class Runner < Thor
-    class_option :'habit_user', :default => ENV['HABIT_USER']
-    class_option :'habit_key', :default => ENV['HABIT_KEY']
+    class_option :habit_user, default: ENV['HABIT_USER']
+    class_option :habit_key, default: ENV['HABIT_KEY']
 
     desc 'daily COMMAND ...ARGS', 'list or update dailies'
     subcommand 'daily', Daily
