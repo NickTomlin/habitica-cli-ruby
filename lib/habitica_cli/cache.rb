@@ -5,12 +5,21 @@ module HabiticaCli
   # Responsible for caching habit responses
   class Cache
     def initialize(path = nil)
-      path = File.join(Dir.home, '.habitca-cli-cache') if path.nil?
-      @store = PStore.new(path)
+      @path = path || File.join(Dir.home, '.habitca-cli-cache')
+      create_store
+    end
+
+    def create_store
+      @store = PStore.new(@path)
     end
 
     def get(key, default = nil)
       @store.transaction { @store.fetch(key, default) }
+    end
+
+    def destroy!
+      File.delete(@store.path)
+      create_store(@store.path)
     end
 
     # rubocop:disable Metrics/MethodLength
@@ -21,8 +30,11 @@ module HabiticaCli
         shortened = items.map do |item|
           count += 1
           short_id = "#{item['id'][0]}#{count}"
+
           @store[short_id] = item
-          short_id
+
+          item['cid'] = short_id
+          item
         end
         @store[:count] = count
       end

@@ -1,3 +1,5 @@
+require 'habitica_cli/cache'
+
 module HabiticaCli
   # shared task related behavior
   class Task < Thor
@@ -28,11 +30,12 @@ module HabiticaCli
     end
 
     desc 'do <id>', 'complete a todo, daily, or habit'
-    def do(id)
-      response = api.post("user/tasks/#{id}/up")
+    def do(cache_id)
+      item = cache.get(cache_id)
+      response = api.post("user/tasks/#{item['id']}/up")
 
       if response.success?
-        puts "Completed!"
+        puts 'Completed!'
       else
         puts "Error #{response.body}"
       end
@@ -45,26 +48,8 @@ module HabiticaCli
 
     private
 
-    def validate_type(type)
-      types = %w(todo habit daily)
-      fail "Not a valid type (#{types})" unless types.include?(type)
-    end
-
-    def select(items, type = nil)
-      items.select do |item|
-        (type.nil? || item['type'] == type) &&
-          (options['show_completed'] == true || item['completed'] != true)
-      end
-    end
-
-    def display(response, type)
-      items = select(response.body, type)
-      puts type.capitalize unless type.nil?
-      items.each do |item|
-        output = type.nil? ? "#{item['type']} " : ''
-        output += "- #{item['text']} #{item['id']}"
-        puts output
-      end
+    def cache
+      @cache ||= Cache.new
     end
 
     def api
@@ -74,6 +59,41 @@ module HabiticaCli
         fail "You must provide a habit user and api key \n\n do this via (HABIT_USER and HABIT_KEY) or the --habit_user --habit_key" # rubocop:disable Metrics/LineLength
       end
       Api.new(user, key)
+    end
+
+    def validate_type(type)
+      types = %w(todo habit daily)
+      fail "Not a valid type (#{types})" unless types.include?(type)
+    end
+
+    def filter_tasks(tasks, type = nil)
+      tasks.select do |task|
+        (type.nil? || task['type'] == type) &&
+          (options['show_completed'] == true || task['completed'] != true)
+      end
+    end
+
+    def select_attributes(tasks)
+      keys = %w(completed id text type)
+      tasks.map do |task|
+        task.select { |k, _| keys.include?(k) }
+      end
+    end
+
+    def cache_tasks(tasks, type)
+      cache.store_tasks(
+        select_attributes(filter_tasks(tasks, type))
+      )
+    end
+
+    def display(response, type)
+      tasks = cache_tasks(response.body, type)
+      puts type.capitalize unless type.nil?
+      tasks.each do |item|
+        output = type.nil? ? "#{item['type']} " : ''
+        output += "- [#{item['cid']}] #{item['text']}"
+        puts output
+      end
     end
   end
 end
