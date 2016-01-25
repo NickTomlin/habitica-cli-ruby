@@ -1,8 +1,16 @@
+require 'thor'
+require 'habitica_cli/api'
 require 'habitica_cli/cache'
 
 module HabiticaCli
-  # shared task related behavior
+  # At the moment this holds _all_ tasks
+  # until we can figure out a better way to split
+  # out top level tasks into individual files
+  # (thor's DSL makes that a little bit of a chore at the moment)
   class Task < Thor
+    class_option :habit_user, default: ENV['HABIT_USER']
+    class_option :habit_key, default: ENV['HABIT_KEY']
+
     # TODO: consider using this inside display instead of select
     desc 'list <type>', 'list tasks, optionally filterd by <type>'
     method_option :show_completed, aliases: '-c', default: false, type: :boolean
@@ -17,13 +25,14 @@ module HabiticaCli
       end
     end
 
-    desc 'add <text>', 'add a new habit'
+    desc 'add <type: habit | daily | todo> <text>', 'add a new task'
     def add(type, text)
       validate_type(type)
       response = api.post('user/tasks', type: type, text: text)
 
       if response.success?
-        puts "Added #{response.body['text']} #{response.body['id']}"
+        task = cache_tasks([response.body], type).first
+        puts "Added #{task['text']} [#{task['cid']}]"
       else
         puts "Error adding #{text}: #{response.body}"
       end
@@ -35,7 +44,7 @@ module HabiticaCli
       response = api.post("user/tasks/#{item['id']}/up")
 
       if response.success?
-        puts 'Completed!'
+        puts "Completed: #{item['text']}"
       else
         puts "Error #{response.body}"
       end
@@ -53,8 +62,8 @@ module HabiticaCli
     end
 
     def api
-      user = parent_options[:habit_user]
-      key = parent_options[:habit_key]
+      user = options[:habit_user]
+      key = options[:habit_key]
       if user.empty? || key.empty?
         fail "You must provide a habit user and api key \n\n do this via (HABIT_USER and HABIT_KEY) or the --habit_user --habit_key" # rubocop:disable Metrics/LineLength
       end
