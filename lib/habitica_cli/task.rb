@@ -54,21 +54,27 @@ module HabiticaCli
       end
     end
 
-    desc 'do <id>', 'complete a todo, daily, or habit'
-    def do(cache_id)
-      item = cache.get(cache_id)
-      response = api.post("user/tasks/#{item['id']}/up")
-
-      if response.success?
-        puts "Completed: #{item['text']}"
-      else
-        puts "Error #{response.body}"
+    desc 'do <id> (<id> <id>)', 'complete a todo, daily, or habit. Pass multiple ids in separated by a space'
+    def do(*cache_ids)
+      items = cache_ids.map { |id| cache.get(id) }
+      items.each do  |item|
+        response = api.post("user/tasks/#{item['id']}/up")
+        if response.success?
+          puts "Completed: #{item['text']}"
+        else
+          puts "Error #{response.body}"
+        end
       end
     end
 
     desc 'clear', 'clear completed todos'
     def clear
       api.post('user/tasks/clear-completed')
+      if response.success?
+        puts "Tasks cleared"
+      else
+        puts "Error #{response.body}"
+      end
     end
 
     private
