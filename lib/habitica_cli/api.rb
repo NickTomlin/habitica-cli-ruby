@@ -1,7 +1,3 @@
-require 'faraday'
-require 'faraday_middleware'
-require 'pry'
-
 module HabiticaCli
   # responsible for communicating with habit at a low level
   class Api

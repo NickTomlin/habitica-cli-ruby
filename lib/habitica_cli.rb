@@ -1,5 +1,17 @@
+require 'thor'
+require 'pstore'
+require 'faraday'
+require 'faraday_middleware'
 require 'habitica_cli/version'
-require 'habitica_cli/task'
+require 'habitica_cli/main'
+require 'habitica_cli/api'
+require 'habitica_cli/commands/shared'
+require 'habitica_cli/commands/list'
+require 'habitica_cli/commands/status'
+require 'habitica_cli/commands/do'
+require 'habitica_cli/commands/add'
+require 'habitica_cli/commands/clear'
+require 'habitica_cli/cache'
 
 # A command line interface to habitica
 # built on thor with a faraday based api layer
@@ -7,6 +19,6 @@ require 'habitica_cli/task'
 # * create, complete, and list todos, habits, and dailies
 module HabiticaCli
   def self.start(*args)
-    Task.start(*args)
+    Main.start(*args)
   end
 end

@@ -1,5 +1,3 @@
-require 'pstore'
-
 module HabiticaCli
   # Extremely simplistic layer on top of PStore
   # Responsible for caching habit responses
