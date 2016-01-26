@@ -25,7 +25,7 @@ module HabiticaCli
       end
     end
 
-    desc 'status', 'Get user status, dailies'
+    desc 'status', 'Get user stats, dailies, and todos'
     def status
       response = api.get('user')
       if response.success?
