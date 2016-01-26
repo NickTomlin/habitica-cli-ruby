@@ -2,4 +2,13 @@
 
 require 'habitica_cli'
 
+banner = <<-BANNER
+ ____  ____  ____  ____  ____  ____  ____  ____
+||h ||||a ||||b ||||i ||||t ||||i ||||c ||||a ||
+||__||||__||||__||||__||||__||||__||||__||||__||
+
+BANNER
+
+puts banner if ARGV.empty?
+
 HabiticaCli.start(ARGV)
