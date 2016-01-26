@@ -19,13 +19,29 @@ module HabiticaCli
       response = api.get('user/tasks')
 
       if response.success?
-        display(response, type)
+        display(response.body, type)
       else
         puts 'Error connecting to habit api'
       end
     end
 
-    desc 'add <type: habit | daily | todo> <text>', 'add a new task'
+    desc 'status', 'Get user status, dailies'
+    def status
+      response = api.get('user')
+      if response.success?
+        stats = response.body['stats']
+        puts [
+          "Gold: #{stats['gp'].round}",
+          "Health: #{stats['hp'].round}/#{stats['maxHealth']}"
+        ].join(" | ")
+
+        display(response.body['todos'] + response.body['dailys'], nil)
+      else
+        puts "Error: #{response.error}"
+      end
+    end
+
+    desc 'add <habit | daily | todo> <text>', 'add a new task'
     def add(type, text)
       validate_type(type)
       response = api.post('user/tasks', type: type, text: text)
@@ -95,12 +111,12 @@ module HabiticaCli
       )
     end
 
-    def display(response, type)
-      tasks = cache_tasks(response.body, type)
+    def display(raw_tasks, type)
+      tasks = cache_tasks(raw_tasks, type)
       puts type.capitalize unless type.nil?
       tasks.each do |item|
-        output = type.nil? ? "#{item['type']} " : ''
-        output += "- [#{item['cid']}] #{item['text']}"
+        output = type.nil? ? "(#{item['type']}) " : ''
+        output += "[#{item['cid']}] #{item['text']}"
         puts output
       end
     end
