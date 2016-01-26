@@ -8,8 +8,8 @@ module HabiticaCli
   # out top level tasks into individual files
   # (thor's DSL makes that a little bit of a chore at the moment)
   class Task < Thor
-    class_option :habit_user, default: ENV['HABIT_USER']
-    class_option :habit_key, default: ENV['HABIT_KEY']
+    class_option :habit_user, hide: true, default: ENV['HABIT_USER']
+    class_option :habit_key, hide: true, default: ENV['HABIT_KEY']
 
     # TODO: consider using this inside display instead of select
     desc 'list <type>', 'list tasks, optionally filterd by <type>'
