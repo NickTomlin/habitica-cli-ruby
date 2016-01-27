@@ -1,5 +1,3 @@
-require 'habitica_cli/cache'
-
 RSpec.describe HabiticaCli::Cache do
   FILE_PATH = File.expand_path('./support/temp', __dir__)
 

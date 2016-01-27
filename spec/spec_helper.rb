@@ -1,4 +1,5 @@
 require 'webmock/rspec'
+require 'habitica_cli'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

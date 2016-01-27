@@ -4,11 +4,11 @@ module HabiticaCli
   class Cache
     def initialize(path = nil)
       @path = path || File.join(Dir.home, '.habitca-cli-cache')
-      create_store
+      create_store(@path)
     end
 
-    def create_store
-      @store = PStore.new(@path)
+    def create_store(path)
+      @store = PStore.new(path)
     end
 
     def get(key, default = nil)
@@ -17,7 +17,7 @@ module HabiticaCli
 
     def destroy!
       File.delete(@store.path)
-      create_store(@store.path)
+      create_store(@path)
     end
 
     # rubocop:disable Metrics/MethodLength
