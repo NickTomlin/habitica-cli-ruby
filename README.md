@@ -23,7 +23,7 @@ Or install it yourself as:
 The cli needs your habitica user id and api key. You can configure these via the following:
 
 - Setting/Exporting `HABIT_USER` and `HABIT_KEY` in your environment
-- Using the `--habit-user` and `--habit-key` flags
+- Using the `--habit-user` and `--habit-key` flags e.g. `habitica list --habit-user='user-id' --habit-key='user-api-key'`
 
 ```shell
 habitica <command> <action>
