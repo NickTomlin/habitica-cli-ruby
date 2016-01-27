@@ -1,4 +1,5 @@
-# habitica-cli
+habitica-cli [![Build Status](https://travis-ci.org/NickTomlin/habitica-cli-ruby.png?branch=master)](https://travis-ci.org/NickTomlin/habitica-cli-ruby) [![Gem Version](https://badge.fury.io/rb/habitica_cli.svg)](https://badge.fury.io/rb/habitica_cli)
+===
 
 A command line interface for habitica
 
@@ -7,7 +8,7 @@ A command line interface for habitica
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'habitica-cli'
+gem 'habitica_cli'
 ```
 
 And then execute:
@@ -16,7 +17,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install habitica-cli
+    $ gem install habitica_cli
 
 ## Usage
 
