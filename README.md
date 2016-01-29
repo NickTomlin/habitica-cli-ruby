@@ -5,18 +5,6 @@ A command line interface for habitica
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'habitica_cli'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
     $ gem install habitica_cli
 
 ## Usage
