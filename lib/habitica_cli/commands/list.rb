@@ -3,7 +3,7 @@ module HabiticaCli
   module Commands
     def self.list(env, type = nil)
       validate_type(type) if type
-      response = env.api.get('user/tasks')
+      response = env.api.get('tasks/user')
 
       if response.success?
         display(env, response.body, type)

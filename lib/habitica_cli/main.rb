@@ -1,3 +1,5 @@
+require 'ostruct'
+
 module HabiticaCli
   # At the moment this holds _all_ tasks
   # until we can figure out a better way to split

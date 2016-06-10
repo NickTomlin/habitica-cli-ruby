@@ -3,7 +3,7 @@ module HabiticaCli
   # to slim down output
   module Commands
     def self.clear(env)
-      env.api.post('user/tasks/clear-completed')
+      env.api.post('tasks/clear-completed')
       if response.success?
         puts 'Tasks cleared'
       else

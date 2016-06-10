@@ -4,7 +4,7 @@ module HabiticaCli
   module Commands
     def self.add(env, type, text)
       validate_type(type)
-      response = env.api.post('user/tasks', type: type, text: text)
+      response = env.api.post('tasks', type: type, text: text)
 
       if response.success?
         task = cache_tasks(env, [response.body], type).first

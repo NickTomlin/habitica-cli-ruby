@@ -4,7 +4,7 @@ module HabiticaCli
     def self.do(env, cache_ids)
       items = cache_ids.map { |id| env.cache.get(id) }
       items.each do |item|
-        response = env.api.post("user/tasks/#{item['id']}/up")
+        response = env.api.post("tasks/#{item['id']}/score/up")
         if response.success?
           puts "Completed: #{item['text']}"
         else

@@ -11,7 +11,7 @@ RSpec.describe HabiticaCli::Api do
 
     api.get('test')
 
-    expect(WebMock).to have_requested(:get, 'https://habitica.com/api/v2/test')
+    expect(WebMock).to have_requested(:get, 'https://habitica.com/api/v3/test')
       .with(headers: { :'X-Api-Key' => 'test_key', :'X-Api-User' => 'test_user' }) # rubocop:disable Metrics/LineLength
   end
 

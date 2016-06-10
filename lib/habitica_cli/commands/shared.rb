@@ -26,7 +26,8 @@ module HabiticaCli
       )
     end
 
-    def self.display(env, raw_tasks, type)
+    def self.display(env, body, type)
+      raw_tasks = body['data']
       tasks = cache_tasks(env, raw_tasks, type)
       puts type.capitalize unless type.nil?
       tasks.each do |item|
