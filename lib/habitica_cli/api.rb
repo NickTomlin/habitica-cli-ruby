@@ -1,6 +1,35 @@
 module HabiticaCli
   # responsible for communicating with habit at a low level
   class Api
+    # A simple wrapper for API errors
+    class ApiError < StandardError
+      def initialize(response)
+        @response = response
+        set_backtrace([])
+      end
+
+      def to_s
+        errors = @response.body['errors'] || []
+        path = @response.url.path
+        error_messages = errors.map { |e| e['message'] }
+        %(
+Habitica Error (#{path}): #{@response.body['message']}
+====
+#{error_messages.join("\n")}
+)
+      end
+    end
+
+    # generic handling for habitica responses
+    class HabiticaResponseMiddleware < Faraday::Middleware
+      def call(request_env)
+        @app.call(request_env).on_complete do |response_env|
+          fail ApiError.new(response_env) unless response_env.success? # rubocop:disable Style/RaiseArgs, Style/LineLength
+          response_env
+        end
+      end
+    end
+
     def initialize(user_id, api_token)
       @debug = ENV['DEBUG_HABITICA'] == 'true'
       @user_id = user_id
@@ -34,10 +63,11 @@ module HabiticaCli
     def configure_defaults(faraday)
       faraday.request :json
 
+      faraday.use HabiticaResponseMiddleware
       faraday.response :json, content_type: /\bjson$/
       faraday.response :logger if @debug
 
-      faraday.adapter  Faraday.default_adapter
+      faraday.adapter Faraday.default_adapter
     end
 
     def connection
