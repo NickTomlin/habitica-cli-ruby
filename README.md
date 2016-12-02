@@ -13,6 +13,10 @@ The cli needs your habitica user id and api key. You can configure these via the
 
 - Setting/Exporting `HABIT_USER` and `HABIT_KEY` in your environment
 - Using the `--habit-user` and `--habit-key` flags e.g. `habitica list --habit-user='user-id' --habit-key='user-api-key'`
+- Creating a YAML file with `habit_user: <your user id>` and `habit_key: <your key>` at:
+  - osx: `~/Library/Preferencs/habitica_cli-ruby/config.yml`
+  - nix: `~/.config/habitica_cli-ruby/config.yml`
+  - windows: `~\AppData\Local\Config\habitica_cli-ruby\config.yml`
 
 ```shell
 habitica <command> <action>
