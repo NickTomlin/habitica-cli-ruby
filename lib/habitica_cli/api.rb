@@ -24,7 +24,7 @@ Habitica Error (#{path}): #{@response.body['message']}
     class HabiticaResponseMiddleware < Faraday::Middleware
       def call(request_env)
         @app.call(request_env).on_complete do |response_env|
-          fail ApiError.new(response_env) unless response_env.success? # rubocop:disable Style/RaiseArgs, Style/LineLength
+          fail ApiError.new(response_env) unless response_env.success? # rubocop:disable Style/RaiseArgs, Metrics/LineLength
           response_env
         end
       end
