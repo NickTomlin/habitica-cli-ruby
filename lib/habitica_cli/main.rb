@@ -1,19 +1,19 @@
-require 'ostruct'
-
 module HabiticaCli
   # At the moment this holds _all_ tasks
   # until we can figure out a better way to split
   # out top level tasks into individual files
-  # (thor's DSL makes that a little bit of a chore at the moment)
+  # (thor's DSL makes that a little bit of a chore)
   class Main < Thor
-    class_option :habit_user, hide: true, default: ENV['HABIT_USER']
-    class_option :habit_key, hide: true, default: ENV['HABIT_KEY']
+    # rubocop:disable Metrics/LineLength
+    class_option :habit_user, hide: true, aliases: '--habit-user', default: ENV['HABIT_USER']
+    class_option :habit_key, hide: true, aliases: '--habit-key', default: ENV['HABIT_KEY']
+    # rubocop:enable Metrics/LineLength
 
     def initialize(*args)
       super(*args)
-      @api = api
       @cache = cache
       @options = options
+      @api = configure_api
     end
 
     # TODO: consider using this inside display instead of select
@@ -53,17 +53,21 @@ module HabiticaCli
       )
     end
 
-    def cache
-      @cache ||= Cache.new
+    def configure_api
+      config = Config.new(@options)
+      user, key = config.user_and_api_key
+
+      if user.nil? || key.nil?
+        help
+        puts config.usage
+        exit 1
+      end
+
+      @api = Api.new(user, key)
     end
 
-    def api
-      user = options[:habit_user]
-      key = options[:habit_key]
-      if user.empty? || key.empty?
-        fail "You must provide a habit user and api key \n\n do this via (HABIT_USER and HABIT_KEY) or the --habit_user --habit_key" # rubocop:disable Metrics/LineLength
-      end
-      Api.new(user, key)
+    def cache
+      @cache ||= Cache.new
     end
   end
 end
