@@ -4,10 +4,8 @@ module HabiticaCli
   # out top level tasks into individual files
   # (thor's DSL makes that a little bit of a chore)
   class Main < Thor
-    # rubocop:disable Metrics/LineLength
-    class_option :habit_user, hide: true, aliases: '--habit-user', default: ENV['HABIT_USER']
-    class_option :habit_key, hide: true, aliases: '--habit-key', default: ENV['HABIT_KEY']
-    # rubocop:enable Metrics/LineLength
+    class_option :habit_user, hide: true, aliases: '--habit-user'
+    class_option :habit_key, hide: true, aliases: '--habit-key'
 
     def initialize(*args)
       super(*args)

@@ -9,7 +9,8 @@ module HabiticaCli
 
     def user_and_api_key
       config = Kefir.config('habitica_cli')
-      habit_user, habit_key = @options.values_at(:habit_user, :habit_key)
+      habit_user = @options[:habit_user] || ENV['HABIT_USER']
+      habit_key = @options[:habit_key] || ENV['HABIT_KEY']
 
       if blank?(habit_user) || blank?(habit_key)
         habit_user = config.get('habit_user')
