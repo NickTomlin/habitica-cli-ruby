@@ -1,4 +1,6 @@
 module HabiticaCli
+  # Handles basic configuration parsing
+  # and interacts with Kefir for config storage
   class Config
     def initialize(cli_options)
       @options = cli_options
@@ -30,7 +32,9 @@ ERR
     private
 
     def blank?(obj)
+      # rubocop:disable Style/DoubleNegation
       obj.respond_to?(:empty?) ? !!obj.empty? : !obj
+      # rubocop:enable Style/DoubleNegation
     end
   end
 end
